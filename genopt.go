@@ -29,7 +29,7 @@ func (ft flagType) Fname() string {
 	return strings.ToLower(ft.Name) + "Func"
 }
 
-var temp = template.Must(template.New("on").Parse(`package opt
+var temp = template.Must(template.New("on").Parse(`package optfunc
 
 // DO NOT EDIT: automatically generated
 

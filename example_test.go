@@ -1,10 +1,10 @@
-package opt_test
+package optfunc_test
 
 import (
 	"flag"
 	"fmt"
 
-	"github.com/bhenderson/opt"
+	"github.com/bhenderson/optfunc"
 )
 
 var (
@@ -13,8 +13,8 @@ var (
 )
 
 func Example() {
-	fs.Var(opt.Bool("q", "run a query", query))
-	fs.Var(opt.String("qa", "query all the things", queryAll))
+	fs.Var(optfunc.Bool("q", "run a query", query))
+	fs.Var(optfunc.String("qa", "query all the things", queryAll))
 
 	fs.Parse(args)
 	// Output: hello from query

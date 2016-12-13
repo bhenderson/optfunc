@@ -1,5 +1,5 @@
 // Package opt adds a DSL on top of the standard flag package
 
-package opt
+package optfunc
 
 //go:generate go run genopt.go

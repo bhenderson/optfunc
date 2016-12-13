@@ -1,4 +1,4 @@
-package opt
+package optfunc
 
 // DO NOT EDIT: automatically generated
 
