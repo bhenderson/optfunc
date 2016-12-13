@@ -3,85 +3,117 @@ package opt
 // DO NOT EDIT: automatically generated
 
 import (
+	"strconv"
 	"time"
 )
 
-func (fs *FlagSet) Bool(name, usage string, f func(bool)) {
-	var p bool
-	fs.BoolVar(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
+func Bool(name, usage string, f func(bool)) (Value, string, string) {
+	return boolFunc(f), name, usage
 }
 
-func Bool(name, usage string, f func(bool)) {
-	CommandLine.Bool(name, usage, f)
+type boolFunc func(bool)
+
+func (f boolFunc) Set(s string) error {
+	v, err := strconv.ParseBool(s)
+	f(bool(v))
+	return err
+}
+func (f boolFunc) String() string   { return "" }
+func (f boolFunc) IsBoolFlag() bool { return true }
+
+func Duration(name, usage string, f func(time.Duration)) (Value, string, string) {
+	return durationFunc(f), name, usage
 }
 
-func (fs *FlagSet) Duration(name, usage string, f func(time.Duration)) {
-	var p time.Duration
-	fs.DurationVar(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
+type durationFunc func(time.Duration)
+
+func (f durationFunc) Set(s string) error {
+	v, err := strconv.ParseInt(s, 0, 64)
+	f(time.Duration(v))
+	return err
+}
+func (f durationFunc) String() string { return "" }
+
+func Float64(name, usage string, f func(float64)) (Value, string, string) {
+	return float64Func(f), name, usage
 }
 
-func Duration(name, usage string, f func(time.Duration)) {
-	CommandLine.Duration(name, usage, f)
+type float64Func func(float64)
+
+func (f float64Func) Set(s string) error {
+	v, err := strconv.ParseFloat(s, 64)
+	f(float64(v))
+	return err
+}
+func (f float64Func) String() string { return "" }
+
+func Int(name, usage string, f func(int)) (Value, string, string) {
+	return intFunc(f), name, usage
 }
 
-func (fs *FlagSet) Float64(name, usage string, f func(float64)) {
-	var p float64
-	fs.Float64Var(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
+type intFunc func(int)
+
+func (f intFunc) Set(s string) error {
+	v, err := strconv.ParseInt(s, 0, 64)
+	f(int(v))
+	return err
+}
+func (f intFunc) String() string { return "" }
+
+func Int64(name, usage string, f func(int64)) (Value, string, string) {
+	return int64Func(f), name, usage
 }
 
-func Float64(name, usage string, f func(float64)) {
-	CommandLine.Float64(name, usage, f)
+type int64Func func(int64)
+
+func (f int64Func) Set(s string) error {
+	v, err := strconv.ParseInt(s, 0, 64)
+	f(int64(v))
+	return err
+}
+func (f int64Func) String() string { return "" }
+
+func String(name, usage string, f func(string)) (Value, string, string) {
+	return stringFunc(f), name, usage
 }
 
-func (fs *FlagSet) Int(name, usage string, f func(int)) {
-	var p int
-	fs.IntVar(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
+type stringFunc func(string)
+
+func (f stringFunc) Set(s string) error {
+	v, err := s, error(nil)
+	f(string(v))
+	return err
+}
+func (f stringFunc) String() string { return "" }
+
+func Uint(name, usage string, f func(uint)) (Value, string, string) {
+	return uintFunc(f), name, usage
 }
 
-func Int(name, usage string, f func(int)) {
-	CommandLine.Int(name, usage, f)
+type uintFunc func(uint)
+
+func (f uintFunc) Set(s string) error {
+	v, err := strconv.ParseUint(s, 0, 64)
+	f(uint(v))
+	return err
+}
+func (f uintFunc) String() string { return "" }
+
+func Uint64(name, usage string, f func(uint64)) (Value, string, string) {
+	return uint64Func(f), name, usage
 }
 
-func (fs *FlagSet) Int64(name, usage string, f func(int64)) {
-	var p int64
-	fs.Int64Var(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
-}
+type uint64Func func(uint64)
 
-func Int64(name, usage string, f func(int64)) {
-	CommandLine.Int64(name, usage, f)
+func (f uint64Func) Set(s string) error {
+	v, err := strconv.ParseUint(s, 0, 64)
+	f(uint64(v))
+	return err
 }
+func (f uint64Func) String() string { return "" }
 
-func (fs *FlagSet) String(name, usage string, f func(string)) {
-	var p string
-	fs.StringVar(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
-}
-
-func String(name, usage string, f func(string)) {
-	CommandLine.String(name, usage, f)
-}
-
-func (fs *FlagSet) Uint(name, usage string, f func(uint)) {
-	var p uint
-	fs.UintVar(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
-}
-
-func Uint(name, usage string, f func(uint)) {
-	CommandLine.Uint(name, usage, f)
-}
-
-func (fs *FlagSet) Uint64(name, usage string, f func(uint64)) {
-	var p uint64
-	fs.Uint64Var(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
-}
-
-func Uint64(name, usage string, f func(uint64)) {
-	CommandLine.Uint64(name, usage, f)
+// Copy of flag.Value
+type Value interface {
+	Set(string) error
+	String() string
 }

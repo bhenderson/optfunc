@@ -5,21 +5,28 @@ package main
 import (
 	"bytes"
 	"os"
+	"strings"
 
 	"go/format"
 
 	"github.com/bhenderson/go/src/text/template"
 )
 
-var flagTypes = []struct{ Name, Type string }{
-	{"Bool", "bool"},
-	{"Duration", "time.Duration"},
-	{"Float64", "float64"},
-	{"Int", "int"},
-	{"Int64", "int64"},
-	{"String", "string"},
-	{"Uint", "uint"},
-	{"Uint64", "uint64"},
+var flagTypes = []flagType{
+	{"Bool", "bool", "strconv.ParseBool(s)"},
+	{"Duration", "time.Duration", "strconv.ParseInt(s, 0, 64)"},
+	{"Float64", "float64", "strconv.ParseFloat(s, 64)"},
+	{"Int", "int", "strconv.ParseInt(s, 0, 64)"},
+	{"Int64", "int64", "strconv.ParseInt(s, 0, 64)"},
+	{"String", "string", "s, error(nil)"},
+	{"Uint", "uint", "strconv.ParseUint(s, 0, 64)"},
+	{"Uint64", "uint64", "strconv.ParseUint(s, 0, 64)"},
+}
+
+type flagType struct{ Name, Type, ParseFunc string }
+
+func (ft flagType) Fname() string {
+	return strings.ToLower(ft.Name) + "Func"
 }
 
 var temp = template.Must(template.New("on").Parse(`package opt
@@ -28,20 +35,34 @@ var temp = template.Must(template.New("on").Parse(`package opt
 
 import (
 	"time"
+	"strconv"
 )
 
 {{ range . }}
 
-func (fs *FlagSet) {{.Name}}(name, usage string, f func({{.Type}})) {
-	var p {{.Type}}
-	fs.{{.Name}}Var(&p, name, p, usage)
-	fs.Add(name, func() { f(p) })
+func {{.Name}}(name, usage string, f func({{.Type}})) (Value, string, string) {
+	return {{.Fname}}(f), name, usage
 }
 
-func {{.Name}}(name, usage string, f func({{.Type}})) {
-	CommandLine.{{.Name}}(name, usage, f)
+type {{.Fname}} func({{.Type}})
+
+func (f {{.Fname}}) Set(s string) error {
+	v, err := {{.ParseFunc}}
+	f({{.Type}}(v))
+	return err
 }
+func (f {{.Fname}}) String() string { return "" }
+{{ if eq .Type "bool" -}}
+func (f {{.Fname}}) IsBoolFlag() bool { return true }
+{{- end }}
 {{ end }}
+
+// Copy of flag.Value
+type Value interface {
+	Set(string) error
+	String() string
+}
+
 `))
 
 func main() {
