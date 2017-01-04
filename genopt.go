@@ -47,7 +47,9 @@ type {{.Fname}} func({{.Type}})
 
 func (f {{.Fname}}) Set(s string) error {
 	v, err := {{.ParseFunc}}
-	f({{.Type}}(v))
+	if err == nil {
+		f({{.Type}}(v))
+	}
 	return err
 }
 func (f {{.Fname}}) String() string { return "" }

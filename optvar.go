@@ -15,7 +15,9 @@ type boolFunc func(bool)
 
 func (f boolFunc) Set(s string) error {
 	v, err := strconv.ParseBool(s)
-	f(bool(v))
+	if err == nil {
+		f(bool(v))
+	}
 	return err
 }
 func (f boolFunc) String() string   { return "" }
@@ -29,7 +31,9 @@ type durationFunc func(time.Duration)
 
 func (f durationFunc) Set(s string) error {
 	v, err := strconv.ParseInt(s, 0, 64)
-	f(time.Duration(v))
+	if err == nil {
+		f(time.Duration(v))
+	}
 	return err
 }
 func (f durationFunc) String() string { return "" }
@@ -42,7 +46,9 @@ type float64Func func(float64)
 
 func (f float64Func) Set(s string) error {
 	v, err := strconv.ParseFloat(s, 64)
-	f(float64(v))
+	if err == nil {
+		f(float64(v))
+	}
 	return err
 }
 func (f float64Func) String() string { return "" }
@@ -55,7 +61,9 @@ type intFunc func(int)
 
 func (f intFunc) Set(s string) error {
 	v, err := strconv.ParseInt(s, 0, 64)
-	f(int(v))
+	if err == nil {
+		f(int(v))
+	}
 	return err
 }
 func (f intFunc) String() string { return "" }
@@ -68,7 +76,9 @@ type int64Func func(int64)
 
 func (f int64Func) Set(s string) error {
 	v, err := strconv.ParseInt(s, 0, 64)
-	f(int64(v))
+	if err == nil {
+		f(int64(v))
+	}
 	return err
 }
 func (f int64Func) String() string { return "" }
@@ -81,7 +91,9 @@ type stringFunc func(string)
 
 func (f stringFunc) Set(s string) error {
 	v, err := s, error(nil)
-	f(string(v))
+	if err == nil {
+		f(string(v))
+	}
 	return err
 }
 func (f stringFunc) String() string { return "" }
@@ -94,7 +106,9 @@ type uintFunc func(uint)
 
 func (f uintFunc) Set(s string) error {
 	v, err := strconv.ParseUint(s, 0, 64)
-	f(uint(v))
+	if err == nil {
+		f(uint(v))
+	}
 	return err
 }
 func (f uintFunc) String() string { return "" }
@@ -107,7 +121,9 @@ type uint64Func func(uint64)
 
 func (f uint64Func) Set(s string) error {
 	v, err := strconv.ParseUint(s, 0, 64)
-	f(uint64(v))
+	if err == nil {
+		f(uint64(v))
+	}
 	return err
 }
 func (f uint64Func) String() string { return "" }
