@@ -6,10 +6,9 @@ import (
 	"bytes"
 	"os"
 	"strings"
+	"text/template"
 
 	"go/format"
-
-	"github.com/bhenderson/go/src/text/template"
 )
 
 var flagTypes = []flagType{
